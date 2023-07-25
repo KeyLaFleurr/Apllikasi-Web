@@ -22,6 +22,8 @@ use yii\base\Model;
  */
 class SuratMasuk extends \yii\db\ActiveRecord
 {
+    
+    public $dokumenfile;
     /**
      * {@inheritdoc}
      */
@@ -37,6 +39,11 @@ class SuratMasuk extends \yii\db\ActiveRecord
     {
         return [
             [['tgl_surat_masuk', 'tgl_surart', 'no_surat', 'asal_surat', 'perihal_surat', 'disposisi_kabid', 'disposisi_seksi', 'dokumen'], 'string', 'max' => 100],
+            [['dokumenfile'], 'file', 
+            'extensions' => 'doc,docx,pdf,jpeg,jpg,png',
+            'maxSize' => '5000000',
+            'skipOnEmpty' => true,
+        ],
         ];
     }
 
@@ -55,32 +62,10 @@ class SuratMasuk extends \yii\db\ActiveRecord
             'disposisi_kabid' => Yii::t('app', 'Disposisi Kabid'),
             'disposisi_seksi' => Yii::t('app', 'Disposisi Seksi'),
             'dokumen' => Yii::t('app', 'Dokumen'),
-        ];
-    }
-}
-    class FileUpload extends Model
-{
-    /**
-     * @var UploadedFile
-     */
-    public $file;
-
-    public function rules()
-    {
-        return [
-            [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg, pdf'],
+            'dokumenfile' => Yii::t('app', 'Dokumen File'),
         ];
     }
 
-    public function upload()
-    {
-        if ($this->validate()) {
-            $path = 'uploads/' . $this->file->baseName . '.' . $this->file->extension;
-            $this->file->saveAs($path);
-            return $path;
-        } else {
-            return false;
-        }
-    }
+    
 }
 

@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'disposisi_seksi')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'dokumen')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'dokumenfile')->fileInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>

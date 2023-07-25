@@ -47,16 +47,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'dokumen',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Html::a('Download', ['download', 'id' => $model->id]);
+                    if ($model->dokumen) {
+                        $uploadUrl = Yii::$app->request->baseUrl . '/uploads/' . $model->dokumen;
+                        // Display link to the uploaded file
+                        return Html::a($model->dokumen, $uploadUrl, ['target' => '_blank']);
+                    } else {
+                        // Display a message if no file is uploaded
+                        return 'No file uploaded';
+                    }
                 },
             ],
-            [
-                'attribute' => 'upload_file',
-                'format' => 'raw',
-                'value' => function ($model) {
-                    return Html::a('Upload', ['upload', 'id' => $model->id]);
-                },
-            ],
+
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, SuratMasuk $model, $key, $index, $column) {

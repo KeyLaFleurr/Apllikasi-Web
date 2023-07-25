@@ -7,7 +7,6 @@ use app\models\SuratMasukSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\FileUpload;
 use yii\web\UploadedFile;
 
 
@@ -74,6 +73,23 @@ class SuratMasukController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
+                //---proses awal upload file---
+                $model->dokumenfile = UploadedFile::getInstance($model, 'dokumenfile');
+                if($model->validate() && !empty($model->dokumenfile))
+                {
+                    //simpan nama file
+                    $nama = $model->disposisi_kabid.'.'.$model->dokumenfile->extension;
+                    //simpan nama file ke field dokumen
+                    $model->dokumen = $nama;
+                    //simpan semua data 
+                    $model->save();
+                    //simpan file ke folder uploads
+                    $model->dokumenfile->saveAs('uploads/'.$nama);
+
+                }
+                else {
+                    $model->save();
+                }
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -135,57 +151,6 @@ class SuratMasukController extends Controller
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 }
- /**
-     * Finds the SuratMasuk model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return SuratMasuk the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-class FileController extends Controller
-{
-    public function actionUpload($id)
-    {
-        $model = SuratMasuk::findOne($id);
 
-        if (!$model) {
-            throw new \yii\web\NotFoundHttpException('Data tidak ditemukan.');
-        }
-
-        $fileModel = new FileUpload();
-
-        if (Yii::$app->request->isPost) {
-            $fileModel->file = UploadedFile::getInstance($fileModel, 'file');
-
-            if ($fileModel->upload()) {
-                $model->dokumen = $fileModel->file->name;
-                $model->save(false); // Simpan tanpa validasi agar data yang lain tidak berubah
-                Yii::$app->session->setFlash('success', 'File berhasil diupload.');
-            } else {
-                Yii::$app->session->setFlash('error', 'Gagal mengupload file.');
-            }
-
-            return $this->redirect(['index']); // Ganti 'index' dengan action yang sesuai untuk kembali ke halaman sebelumnya
-        }
-
-        return $this->render('upload', ['model' => $fileModel]);
-    }
-
-    public function actionDownload($id)
-    {
-        $model = SuratMasuk::findOne($id);
-
-        if (!$model) {
-            throw new \yii\web\NotFoundHttpException('Data tidak ditemukan.');
-        }
-
-        $path = 'uploads/' . $model->dokumen; // Ganti 'uploads' dengan direktori tempat Anda menyimpan file yang diupload
-        if (file_exists($path)) {
-            Yii::$app->response->sendFile($path);
-        } else {
-            throw new \yii\web\NotFoundHttpException('File tidak ditemukan.');
-        }
-    }
-}
 
 
