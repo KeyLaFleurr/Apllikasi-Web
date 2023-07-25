@@ -22,7 +22,7 @@ use Symfony\Component\DomCrawler\Field\FormField;
 class Form extends Link implements \ArrayAccess
 {
     private \DOMElement $button;
-    private FormFieldRegistry $fields;
+    private $fields;
     private ?string $baseHref;
 
     /**
@@ -245,8 +245,6 @@ class Form extends Link implements \ArrayAccess
 
     /**
      * Removes a field from the form.
-     *
-     * @return void
      */
     public function remove(string $name)
     {
@@ -267,8 +265,6 @@ class Form extends Link implements \ArrayAccess
 
     /**
      * Sets a named field.
-     *
-     * @return void
      */
     public function set(FormField $field)
     {
@@ -353,8 +349,6 @@ class Form extends Link implements \ArrayAccess
      *
      * Expects a 'submit' button \DOMElement and finds the corresponding form element, or the form element itself.
      *
-     * @return void
-     *
      * @throws \LogicException If given node is not a button or input or does not have a form ancestor
      */
     protected function setNode(\DOMElement $node)
@@ -392,7 +386,7 @@ class Form extends Link implements \ArrayAccess
      * the form node or the entire document depending on whether we need
      * to find non-descendant elements through HTML5 'form' attribute.
      */
-    private function initialize(): void
+    private function initialize()
     {
         $this->fields = new FormFieldRegistry();
 
@@ -442,7 +436,7 @@ class Form extends Link implements \ArrayAccess
         }
     }
 
-    private function addField(\DOMElement $node): void
+    private function addField(\DOMElement $node)
     {
         if (!$node->hasAttribute('name') || !$node->getAttribute('name')) {
             return;

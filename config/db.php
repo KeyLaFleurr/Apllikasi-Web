@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'dsn' => 'mysql:host=mariadb;dbname=aplikasi_web',
     'username' => 'root',
-    'password' => '',
+    'password' => 'admin1',
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)

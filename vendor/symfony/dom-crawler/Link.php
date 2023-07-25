@@ -23,9 +23,6 @@ class Link extends AbstractUriElement
         return $this->node->getAttribute('href');
     }
 
-    /**
-     * @return void
-     */
     protected function setNode(\DOMElement $node)
     {
         if ('a' !== $node->nodeName && 'area' !== $node->nodeName && 'link' !== $node->nodeName) {
